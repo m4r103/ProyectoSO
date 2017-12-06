@@ -10,9 +10,9 @@ class CreadorProcesos:
             f.write('hay_memoria:'+str(param)+':ram')
         with open(path2, 'r') as f:
             request = f.read()
-            if request == '-1':
-                print('No hay RAM suficiente')
-                return
+        if request == '-1':
+            print('No hay RAM suficiente')
+            return
         proceso = subprocess.Popen(['xterm', '-e', './externo.py'])
         print('pid: '+str(proceso.pid))
         with open(path, 'w') as f:
@@ -86,8 +86,10 @@ if __name__ == '__main__':
             DATOS = int(input('proceso > '))
             objeto.mover(DATOS,'ram')
         elif DATOS.upper() == 'SALIR':
-            for i in objeto.lista_fea:
-                objeto.matar_proceso(i.pid)
+            for entry in objeto.lista_fea:
+                entry.kill()
+            with open(path, 'w') as file:
+                file.write('salir')
             break
     os.unlink(path)
     os.unlink(path2)
