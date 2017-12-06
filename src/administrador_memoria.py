@@ -112,7 +112,7 @@ class AdministradorMemoria:
                     print('No hay suficiente memoria RAM')
                     return -1
                 self.tabla.remove(entry)
-                datos = self.ram[entry.dir_fisica_inicio].datos
+                datos = self.swap[entry.dir_fisica_inicio].datos
                 self.descargar_de_unidad(entry, self.swap)
                 entry.unidad = 'ram'
                 foo = EntradaTabla(entry.pid,inicio,entry.size, 'ram')
@@ -152,9 +152,8 @@ if __name__ == '__main__':
     path2 = "/tmp/com2"
     ADMIN = AdministradorMemoria()
     I = True
-    while I:
-        
-        fifo = open(path,'r')
+    while I:    
+        fifo = open(path, 'r')
         entrada_input = fifo.read().split(':')
         fifo.close()
         os.system('clear')
@@ -181,6 +180,8 @@ if __name__ == '__main__':
             REQUEST = ADMIN.mover_ram(int(entrada_input[1]))
             with open(path2, 'w') as f:
                 f.write(str(REQUEST))
+        elif entrada_input[0] == 'salir':
+            break
 
         print('\n\n:::RAM:::')
         ADMIN.dibujar(ADMIN.ram)
