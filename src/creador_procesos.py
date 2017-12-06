@@ -24,21 +24,23 @@ class CreadorProcesos:
                 return entry
         return -1
 
-    def mover_swap(self, pid):
+    def mover(self, pid, unidad):
         if self.obtener_proceso(pid) == -1:
             print('No existe el proceso')
         with open(path, 'w') as f:
-            f.write('mover_swap:'+str(pid))
-        with open(path2,'r') as f:
+            f.write('mover_'+unidad+':'+str(pid))
+        with open(path2, 'r') as f:
             request = f.read()
         if request == '-1':
-            print('No hay espacio suficiente en SWAP')
+            print('No hay espacio suficiente en '+unidad.upper())
             return
         elif request == '-2':
             print('No existe el proceso en la tabla')
             return
+        elif request == '-3':
+            print('El proceso no esta en '+unidad.upper())
         elif request == '0':
-            print('El proceso se ha movido a SWAP')
+            print('El proceso se ha movido a '+unidad.upper())
                 
                     
 
@@ -79,7 +81,10 @@ if __name__ == '__main__':
             objeto.listar()
         elif DATOS.upper() == 'MOVER_SWAP':
             DATOS = int(input('proceso > '))
-            objeto.mover_swap(DATOS)
+            objeto.mover(DATOS,'swap')
+        elif DATOS.upper() == 'MOVER_RAM':
+            DATOS = int(input('proceso > '))
+            objeto.mover(DATOS,'ram')
         elif DATOS.upper() == 'SALIR':
             for i in objeto.lista_fea:
                 objeto.matar_proceso(i.pid)
