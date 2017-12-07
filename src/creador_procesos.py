@@ -3,8 +3,12 @@
 import subprocess
 import os
 
+## Clase creadora de procesos
 class CreadorProcesos:
+    ## Lista para almacenar los objetos Popen de los subprocesos
+    # Se usa un Popen para tener control sobre los procesos crados
     lista_fea = []
+    ## Funcion que crea el proceso
     def crear_proceso(self, param):
         with open(path, 'w') as f:
             f.write('hay_memoria:'+str(param)+':ram')
@@ -18,12 +22,20 @@ class CreadorProcesos:
         with open(path, 'w') as f:
             f.write('crear:'+str(proceso.pid)+':'+str(param))
         self.lista_fea.append(proceso)
+
+    ## Obtiene el objeto Popen de la lista
     def obtener_proceso(self, pid):
         for entry in self.lista_fea:
             if entry.pid == pid:
                 return entry
         return -1
 
+    ## Desfragmenta la unidad seleccionada
+    def desfragmentar(self, unida):
+        print('desfragmentando')
+
+    ## Envia una peticion al administrador de tarea para
+    ## mover un proceso a ram o swap
     def mover(self, pid, unidad):
         if self.obtener_proceso(pid) == -1:
             print('No existe el proceso')
@@ -41,9 +53,7 @@ class CreadorProcesos:
             print('El proceso no esta en '+unidad.upper())
         elif request == '0':
             print('El proceso se ha movido a '+unidad.upper())
-                
-                    
-
+    ## Mata al proceso selecionado a partir de su PID
     def matar_proceso(self, pid):
         entry = self.obtener_proceso(pid)
         if entry == -1:
@@ -53,11 +63,11 @@ class CreadorProcesos:
             f.write('matar:'+str(pid))
         self.lista_fea.remove(entry)
         entry.kill()
-
+    ## Lista el pid de todos los procesos creados
     def listar(self):
         for i in self.lista_fea:
             print(str(i.pid))
-
+## Funcion Main
 if __name__ == '__main__':
     path = "/tmp/com1"
     path2 = "/tmp/com2"
