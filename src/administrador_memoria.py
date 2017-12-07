@@ -93,10 +93,6 @@ class AdministradorMemoria:
                 if entry.unidad == 'ram': ## Verificamos si esta en ram
                     self.descargar_de_unidad(entry, self.ram)
                 elif entry.unidad == 'swap': ## Verificamos si esta en swap
-                    self.descargar_de_ificamos que el proceso Existe
-                if entry.unidad == 'ram': ## Verificamos si esta en ram
-                    self.descargar_de_unidad(entry, self.ram)
-                elif entry.unidad == 'swap': ## Verificamos si esta en swap
                     self.descargar_de_unidad(entry, self.swap)
                 ## Eliminamos la entrada de la tabla
                 self.tabla.remove(entry)
