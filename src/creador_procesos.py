@@ -55,6 +55,7 @@ class CreadorProcesos:
             print('El proceso no esta en '+unidad.upper())
         elif request == '0':
             print('El proceso se ha movido a '+unidad.upper())
+        return request
     ## Mata al proceso selecionado a partir de su PID
     def matar_proceso(self, pid):
         entry = self.obtener_proceso(pid)
@@ -118,15 +119,17 @@ if __name__ == '__main__':
         elif DATOS.upper() == 'MOVER_SWAP':
             try:
                 DATOS = int(input('proceso > '))
-                objeto.pausar(DATOS)
-                objeto.mover(DATOS, 'swap')
+                REQUEST = objeto.mover(DATOS, 'swap')
+                if REQUEST == '0':
+                    objeto.pausar(DATOS)
             except ValueError:
                 print('el valor especificado no es un numero')                
         elif DATOS.upper() == 'MOVER_RAM':
             try:
                 DATOS = int(input('proceso > '))
-                objeto.continuar(DATOS)
-                objeto.mover(DATOS, 'ram')
+                REQUEST = objeto.mover(DATOS, 'ram')
+                if REQUEST == '0':
+                    objeto.continuar(DATOS)
             except ValueError:
                 print('el valor especificado no es un numero')
         elif DATOS.upper() == 'DEFRAG':
