@@ -162,21 +162,37 @@ class AdministradorMemoria:
                 return 0
         print('No se econtro el proceso')
         return -2
-
+    #  Fucnion para desfragmentar 
+    #  La desfragmentacion se hace mediante el ordenado de la tabla
+    #  de forma ascendente a partir de la direccion fisica de inicio
+    #  de cada entrada de la tabla, posteriormente se recorren los datos
+    #  a la nueva localidad iniciando desde cero
     def desfragmentar(self):
         inicio = 0
         self.tabla = sorted(self.tabla, key=lambda entrada: entrada.dir_fisica_inicio)
         for entry in self.tabla:
+            # Solo si esta en ram se movera el proceso
             if entry.unidad == 'ram':
+                # Si la nueva direccion de inicio es distinta a su antigua direccion,
+                # entonces el proceso se movera
                 if entry.dir_fisica_inicio != inicio:
+                    # Se barre el segmento
                     for i in range(0, entry.size):
+                        # Debido a la naturaleza de python, los objetos se pasan por
+                        # referencia y no por valor, asi que es necesario crear
+                        # un nuevo objeto de tipo dato con los datos del anterio
+                        # para evitar parasitaje
                         d = self.ram[entry.dir_fisica_inicio+i]
                         t = Datos(d.pid,d.datos)
+                        # Se modifica la ram
                         self.ram[entry.dir_fisica_inicio+i].datos = '0'
                         self.ram[entry.dir_fisica_inicio+i].pid = -1
                         self.ram[inicio+i] = t
+                    # Se actualiza la entra de la tabla
                     entry.dir_fisica_inicio = inicio
                     entry.dir_fisica_fin = inicio+entry.size
+                # Ahora la direccion de inicio del proximo proceso
+                # será a partir de la dirección fisica del proceso anterior
                 inicio = entry.dir_fisica_fin
 
 ##Implementacion de una maquina de estados que recibe
