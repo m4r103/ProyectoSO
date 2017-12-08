@@ -2,6 +2,7 @@
 
 import subprocess
 import os
+import signal
 
 ## Clase creadora de procesos
 class CreadorProcesos:
@@ -31,8 +32,9 @@ class CreadorProcesos:
         return -1
 
     ## Desfragmenta la unidad seleccionada
-    def desfragmentar(self, unida):
-        print('desfragmentando')
+    def desfragmentar(self):
+        with open(path, 'w') as f:
+            f.write('defrag')
 
     ## Envia una peticion al administrador de tarea para
     ## mover un proceso a ram o swap
@@ -67,6 +69,24 @@ class CreadorProcesos:
     def listar(self):
         for i in self.lista_fea:
             print(str(i.pid))
+
+    ## Envia una señal para pausar el proceso especificado
+    def pausar(self, pid):
+        for i in self.lista_fea:
+            if i.pid == pid:
+                try:
+                    os.kill(pid, signal.SIGTSTP)
+                except OSError:
+                    print('error')
+
+    ## Envia una señal para continuar el proceso especificado
+    def continuar(self, pid):
+        for i in self.lista_fea:
+            if i.pid == pid:
+                try:
+                    os.kill(pid, signal.SIGCONT)
+                except OSError:
+                    print('error')
 ## Funcion Main
 if __name__ == '__main__':
     path = "/tmp/com1"
@@ -91,10 +111,14 @@ if __name__ == '__main__':
             objeto.listar()
         elif DATOS.upper() == 'MOVER_SWAP':
             DATOS = int(input('proceso > '))
-            objeto.mover(DATOS,'swap')
+            objeto.pausar(DATOS)
+            objeto.mover(DATOS, 'swap')
         elif DATOS.upper() == 'MOVER_RAM':
             DATOS = int(input('proceso > '))
-            objeto.mover(DATOS,'ram')
+            objeto.continuar(DATOS)
+            objeto.mover(DATOS, 'ram')
+        elif DATOS.upper() == 'DEFRAG':
+            objeto.desfragmentar()
         elif DATOS.upper() == 'SALIR':
             for entry in objeto.lista_fea:
                 entry.kill()

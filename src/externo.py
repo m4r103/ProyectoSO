@@ -11,4 +11,4 @@ while I:
     fifo = open(path, 'w')
     fifo.write('insertar:'+str(os.getppid())+":"+DATOS)
     fifo.close()
-    print('datos: '+DATOS) 
+    print('datos: '+DATOS)
