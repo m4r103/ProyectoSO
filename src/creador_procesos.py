@@ -102,21 +102,33 @@ if __name__ == '__main__':
     while I:
         DATOS = str(input('>'))
         if DATOS.upper() == 'CREAR':
-            DATOS = int(input('size > '))
-            objeto.crear_proceso(DATOS)
+            try:
+                DATOS = int(input('size > '))
+                objeto.crear_proceso(DATOS)
+            except ValueError:
+                print('el valor especificado no es un numero')
         elif DATOS.upper() == 'MATAR':
-            DATOS = int(input('proceso > '))
-            objeto.matar_proceso(DATOS)
+            try:
+                DATOS = int(input('proceso > '))
+                objeto.matar_proceso(DATOS)
+            except ValueError:
+                print('el valor especificado no es un numero')                
         elif DATOS.upper() == 'LISTAR':
             objeto.listar()
         elif DATOS.upper() == 'MOVER_SWAP':
-            DATOS = int(input('proceso > '))
-            objeto.pausar(DATOS)
-            objeto.mover(DATOS, 'swap')
+            try:
+                DATOS = int(input('proceso > '))
+                objeto.pausar(DATOS)
+                objeto.mover(DATOS, 'swap')
+            except ValueError:
+                print('el valor especificado no es un numero')                
         elif DATOS.upper() == 'MOVER_RAM':
-            DATOS = int(input('proceso > '))
-            objeto.continuar(DATOS)
-            objeto.mover(DATOS, 'ram')
+            try:
+                DATOS = int(input('proceso > '))
+                objeto.continuar(DATOS)
+                objeto.mover(DATOS, 'ram')
+            except ValueError:
+                print('el valor especificado no es un numero')
         elif DATOS.upper() == 'DEFRAG':
             objeto.desfragmentar()
         elif DATOS.upper() == 'SALIR':

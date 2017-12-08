@@ -200,6 +200,12 @@ class AdministradorMemoria:
 if __name__ == '__main__':
     path = "/tmp/com1"
     path2 = "/tmp/com2"
+    try:
+        os.mkfifo(path)
+        os.mkfifo(path2)
+        print('fifo created!')
+    except OSError:
+        print('fifo existe')
     ADMIN = AdministradorMemoria()
     I = True
     while I:    
