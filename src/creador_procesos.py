@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 import subprocess
 import os
 import signal
@@ -9,18 +7,21 @@ class CreadorProcesos:
     ## Lista para almacenar los objetos Popen de los subprocesos
     # Se usa un Popen para tener control sobre los procesos crados
     lista_fea = []
+    def __init__(self, path, path2):
+        self.path = path
+        self.path2 = path2
     ## Funcion que crea el proceso
     def crear_proceso(self, param):
-        with open(path, 'w') as f:
+        with open(self.path, 'w') as f:
             f.write('hay_memoria:'+str(param)+':ram')
-        with open(path2, 'r') as f:
+        with open(self.path2, 'r') as f:
             request = f.read()
         if request == '-1':
             print('No hay RAM suficiente')
             return
         proceso = subprocess.Popen(['xterm', '-e', './externo.py'])
         print('pid: '+str(proceso.pid))
-        with open(path, 'w') as f:
+        with open(self.path, 'w') as f:
             f.write('crear:'+str(proceso.pid)+':'+str(param))
         self.lista_fea.append(proceso)
 
@@ -33,7 +34,7 @@ class CreadorProcesos:
 
     ## Desfragmenta la unidad seleccionada
     def desfragmentar(self):
-        with open(path, 'w') as f:
+        with open(self.path, 'w') as f:
             f.write('defrag')
 
     ## Envia una peticion al administrador de tarea para
@@ -41,9 +42,9 @@ class CreadorProcesos:
     def mover(self, pid, unidad):
         if self.obtener_proceso(pid) == -1:
             print('No existe el proceso')
-        with open(path, 'w') as f:
+        with open(self.path, 'w') as f:
             f.write('mover_'+unidad+':'+str(pid))
-        with open(path2, 'r') as f:
+        with open(self.path2, 'r') as f:
             request = f.read()
         if request == '-1':
             print('No hay espacio suficiente en '+unidad.upper())
@@ -62,7 +63,7 @@ class CreadorProcesos:
         if entry == -1:
             print('no existe el proceso')
             return
-        with open(path, 'w') as f:
+        with open(self.path, 'w') as f:
             f.write('matar:'+str(pid))
         self.lista_fea.remove(entry)
         entry.kill()
@@ -88,57 +89,3 @@ class CreadorProcesos:
                     os.kill(pid, signal.SIGCONT)
                 except OSError:
                     print('error')
-## Funcion Main
-if __name__ == '__main__':
-    path = "/tmp/com1"
-    path2 = "/tmp/com2"
-    try:
-        os.mkfifo(path)
-        os.mkfifo(path2)
-        print('fifo created!')
-    except OSError:
-        print('fifo existe')
-    objeto = CreadorProcesos()
-    I = True
-    while I:
-        DATOS = str(input('>'))
-        if DATOS.upper() == 'CREAR':
-            try:
-                DATOS = int(input('size > '))
-                objeto.crear_proceso(DATOS)
-            except ValueError:
-                print('el valor especificado no es un numero')
-        elif DATOS.upper() == 'MATAR':
-            try:
-                DATOS = int(input('proceso > '))
-                objeto.matar_proceso(DATOS)
-            except ValueError:
-                print('el valor especificado no es un numero')                
-        elif DATOS.upper() == 'LISTAR':
-            objeto.listar()
-        elif DATOS.upper() == 'MOVER_SWAP':
-            try:
-                DATOS = int(input('proceso > '))
-                REQUEST = objeto.mover(DATOS, 'swap')
-                if REQUEST == '0':
-                    objeto.pausar(DATOS)
-            except ValueError:
-                print('el valor especificado no es un numero')                
-        elif DATOS.upper() == 'MOVER_RAM':
-            try:
-                DATOS = int(input('proceso > '))
-                REQUEST = objeto.mover(DATOS, 'ram')
-                if REQUEST == '0':
-                    objeto.continuar(DATOS)
-            except ValueError:
-                print('el valor especificado no es un numero')
-        elif DATOS.upper() == 'DEFRAG':
-            objeto.desfragmentar()
-        elif DATOS.upper() == 'SALIR':
-            for entry in objeto.lista_fea:
-                entry.kill()
-            with open(path, 'w') as file:
-                file.write('salir')
-            break
-    os.unlink(path)
-    os.unlink(path2)
