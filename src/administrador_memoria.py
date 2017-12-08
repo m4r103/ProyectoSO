@@ -53,9 +53,12 @@ class AdministradorMemoria:
     def insertar_datos(self, pid, datos):
         for entry in self.tabla:
             if entry.pid == pid:
-                self.cargar_datos_en_unidad(entry, datos, self.ram)
-                return
+                if entry.unidad == 'ram':
+                    self.cargar_datos_en_unidad(entry, datos, self.ram)
+                    return 0
+                return -1
         print('Proceso no encontrado')
+        return -2
 
     ## Inserta los datos a una unidad deseada a partir de una entrada de tabla
     def cargar_datos_en_unidad(self, entrada, datos, unidad):
@@ -160,6 +163,22 @@ class AdministradorMemoria:
         print('No se econtro el proceso')
         return -2
 
+    def desfragmentar(self):
+        inicio = 0
+        self.tabla = sorted(self.tabla, key=lambda entrada: entrada.dir_fisica_inicio)
+        for entry in self.tabla:
+            if entry.unidad == 'ram':
+                if entry.dir_fisica_inicio != inicio:
+                    for i in range(0, entry.size):
+                        d = self.ram[entry.dir_fisica_inicio+i]
+                        t = Datos(d.pid,d.datos)
+                        self.ram[entry.dir_fisica_inicio+i].datos = '0'
+                        self.ram[entry.dir_fisica_inicio+i].pid = -1
+                        self.ram[inicio+i] = t
+                    entry.dir_fisica_inicio = inicio
+                    entry.dir_fisica_fin = inicio+entry.size
+                inicio = entry.dir_fisica_fin
+
 ##Implementacion de una maquina de estados que recibe
 #ordenes desde una fifo
 if __name__ == '__main__':
@@ -184,7 +203,7 @@ if __name__ == '__main__':
         elif entrada_input[0] == 'crear':
             ADMIN.agregar_proceso(int(entrada_input[1]), int(entrada_input[2]))
         elif entrada_input[0] == 'insertar':
-            ADMIN.insertar_datos(int(entrada_input[1]), entrada_input[2])
+            REQUEST = ADMIN.insertar_datos(int(entrada_input[1]), entrada_input[2])
         elif entrada_input[0] == 'matar':
             ADMIN.matar_proceso(int(entrada_input[1]))
         elif entrada_input[0] == 'mover_swap': 
@@ -197,31 +216,10 @@ if __name__ == '__main__':
                 f.write(str(REQUEST))
         elif entrada_input[0] == 'salir':
             break
+        elif entrada_input[0] == 'defrag':
+            ADMIN.desfragmentar()
 
         print('\n\n:::RAM:::')
         ADMIN.dibujar(ADMIN.ram)
         print('\n\n:::SWAP:::')
         ADMIN.dibujar(ADMIN.swap)
-        # # print(entrada_input)
-        #   entrada_input = input('prompt > ')
-        # if entrada_input == 'crear':
-        #     n_pid = int(input('pid > '))
-        #     tam_kb = int(input('tam > '))
-        #     ADMIN.agregar_proceso(n_pid, tam_kb)
-        # elif entrada_input == 'matar':
-        #     n_pid = int(input('pid > '))
-        #     ADMIN.matar_proceso(n_pid)
-        # elif entrada_input == 'insertar':
-        #     n_pid = int(input('pid > '))
-        #     data = input('datos > ')
-        #     ADMIN.insertar_datos(n_pid, data)
-        # elif entrada_input == 'salir':
-        #     break
-        # elif entrada_input == 'mover_swap':
-        #     n_pid = int(input('pid > '))
-        #     ADMIN.mover_swap(n_pid)
-        # elif entrada_input == 'dibujar':
-        #     print('::Memoria RAM::')
-        #     ADMIN.dibujar(ADMIN.ram)
-        #     print('::Memoria SWAP::')
-        #     ADMIN.dibujar(ADMIN.swap)
