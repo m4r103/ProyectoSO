@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import os, sys
-from administrador_memoria import AdministradorMemoria
+from src.administrador_memoria import AdministradorMemoria
 
 ##Implementacion de una maquina de estados que recibe
 #ordenes desde una fifo

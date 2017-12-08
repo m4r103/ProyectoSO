@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import os
-from creador_procesos import CreadorProcesos
+from src.creador_procesos import CreadorProcesos
 ## Funcion Main
 if __name__ == '__main__':
     path = "/tmp/com1"

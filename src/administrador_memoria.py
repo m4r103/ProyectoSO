@@ -1,6 +1,6 @@
 import math
-from entrada_tabla import EntradaTabla
-from datos_unidad import Datos
+from src.entrada_tabla import EntradaTabla
+from src.datos_unidad import Datos
 
 ##Clase del administrador
 class AdministradorMemoria:
