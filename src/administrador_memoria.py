@@ -75,10 +75,12 @@ class AdministradorMemoria:
                     self.descargar_de_unidad(entry, self.ram)
                 elif entry.unidad == 'swap': ## Verificamos si esta en swap
                     self.descargar_de_unidad(entry, self.swap)
+                    return -1
                 ## Eliminamos la entrada de la tabla
                 self.tabla.remove(entry)
-                return
+                return 0
         print('Proceso no econtrado')
+        return -2
     ## Quita todos los datos de la zona de memoria asignada y regresa los datos a 0
     def descargar_de_unidad(self, entry, unidad):
         for i in range(entry.dir_fisica_inicio, entry.dir_fisica_fin):
@@ -92,7 +94,10 @@ class AdministradorMemoria:
             contador = contador+1
             if contador.__mod__(25) == 0:
                 print(' 0x'+str(contador))
-
+        # print('----------------------Tabla--------------------')
+        # print('  PID  | DIR.INICIO | TAM')
+        # for entry in self.tabla:
+        #     print(str(entry.pid)+'|'+str(entry.dir_fisica_inicio)+'|'+str(entry.size))
     #Funcion para mover un proceso a ram
     def mover_ram(self, pid):
         for entry in self.tabla:

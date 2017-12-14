@@ -65,6 +65,11 @@ class CreadorProcesos:
             return
         with open(self.path, 'w') as f:
             f.write('matar:'+str(pid))
+        with open(self.path2, 'r') as f:
+            RESPONSE = f.read()
+        if RESPONSE == '-1':
+            print('El proceso se encuentra en SWAP')
+            return
         self.lista_fea.remove(entry)
         entry.kill()
     ## Lista el pid de todos los procesos creados

@@ -35,7 +35,7 @@ if __name__ == '__main__':
         elif entrada_input[0] == 'insertar':
             REQUEST = ADMIN.insertar_datos(int(entrada_input[1]), entrada_input[2])
         elif entrada_input[0] == 'matar':
-            ADMIN.matar_proceso(int(entrada_input[1]))
+            REQUEST = ADMIN.matar_proceso(int(entrada_input[1]))
         elif entrada_input[0] == 'mover_swap': 
             REQUEST = ADMIN.mover_swap(int(entrada_input[1]))
             with open(path2, 'w') as f:

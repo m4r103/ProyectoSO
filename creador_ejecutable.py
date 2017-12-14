@@ -17,7 +17,7 @@ if __name__ == '__main__':
         DATOS = str(input('>'))
         if DATOS.upper() == 'CREAR':
             try:
-                DATOS = int(input('size > '))
+                DATOS = int(input('size (KB) > '))
                 objeto.crear_proceso(DATOS)
             except ValueError:
                 print('el valor especificado no es un numero')
